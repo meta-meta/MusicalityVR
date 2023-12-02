@@ -5,7 +5,7 @@
 
 * Run this in MQDH: `adb shell setprop debug.oculus.experimentalEnabled 1`
 
-* if adb version error: in terminal run `/c/Program Files/Unity/Hub/Editor/2022.3.14f1/Editor/Data/PlaybackEngines/AndroidPlayer/SDK/platform-tools/adb version` then build and run again
+* if adb version error: in terminal run `/c/Program\ Files/Unity/Hub/Editor/2022.3.14f1/Editor/Data/PlaybackEngines/AndroidPlayer/SDK/platform-tools/adb version` then build and run again
 
 
 ## Meta SDK v59
@@ -25,6 +25,10 @@
 
 [Occlusion Shaders](https://github.com/oculus-samples/Unity-DepthAPI#for-urp)
 [Custom Occlusion Shaders](https://github.com/oculus-samples/Unity-DepthAPI#8-implementing-occlusion-in-custom-shaders)
+
+## Scene Mesh
+
+[Scene Mesh](https://developer.oculus.com/documentation/unity/unity-scene-mesh/)
 
 
 ## URP
