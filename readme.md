@@ -31,6 +31,40 @@
 [Scene Mesh](https://developer.oculus.com/documentation/unity/unity-scene-mesh/)
 
 
+## Boundaryless and Contextual-Boundaryless Apps [First Access Jul 21, 2023](https://developer.oculus.com/first-access/forums/quest/posts/6719608231383751/)
+
+This document details how to implement the required manifest changes to designate your app
+as boundaryless or contextual-boundaryless apps. These manifest tags are mutually
+exclusive. Boundaryless apps will disable the boundary for the entirety of the experience and
+must not have any immersive experiences. Contextual-boundaryless apps include both
+mixed-reality and immersive / VR experiences. Be aware that contextual-boundaryless apps will
+disable the boundary anytime a passthrough layer is submitted – app developers must ensure
+that passthrough layer is only submitted when it is safe to disable the boundary and that the
+passthrough layer is never submitted underneath an immersive VR layer. Additionally,
+boundaryless and contextual-boundaryless only support 6dof apps – 3dof apps may not be
+boundaryless or contextual-boundaryless.
+Also note that apps should not rely on the stage space, since the user may launch the app from
+a location away from their current stage space or may have cleared the boundary history,
+resulting in an unexpected location.
+Refer to the Best Practices for User Comfort & Safety in Boundary-less Experiences document
+to determine if your app is a candidate for boundaryless or contextual-boundaryless mode.
+
+### Boundaryless Manifest
+Add the following entry to the App’s AndroidManifest.xml file
+```xml
+<uses-feature
+  android:name="com.oculus.feature.BOUNDARYLESS_APP"
+  android:required="true"/>
+```
+
+### Contextual-Boundaryless Manifest
+Add the following entry to the App’s AndroidManifest.xml file
+```xml
+<uses-feature
+  android:name="com.oculus.feature.CONTEXTUAL_BOUNDARYLESS_APP"
+  android:required="true"/>
+```
+
 ## URP
 
 
@@ -40,6 +74,9 @@
 
 
 ## TODO
+
+* Try [Colocation: Local Group API and Unity/Unreal Sample Apps Available on First Access](https://developer.oculus.com/first-access/forums/quest/posts/7240101786001057/)
+ * is it compatible with Boundaryless?
 
 * couldn't find MSAA settings:
 
