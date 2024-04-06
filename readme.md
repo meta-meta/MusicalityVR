@@ -1,6 +1,23 @@
 # QuestBoilerplate - DepthAPI test - Unity 2022.3.15f1 URP - Vulkan - Meta SDK v59
 
 
+## MRTK WIP
+[OpenXR settings](https://learn.microsoft.com/en-us/windows/mixed-reality/mrtk-unity/mrtk3-overview/getting-started/setting-up/setup-new-project#5-configure-openxr-related-settings)
+
+[Samples](https://github.com/microsoft/OpenXR-Unity-MixedReality-Samples)
+
+[Aquarium](https://learn.microsoft.com/en-us/windows/mixed-reality/develop/unity/mrtk3-aquarium#download-the-project)
+
+* Oculus features unsupported on OpenXR
+  * DepthAPI
+  * Passthrough over Link
+  * 
+
+* Issues
+  * no Quest 3 controller models over Link
+  * Quest 3 controller models on device not animated, offset from hands
+  * controller hands do odd things like pinch when pulling trigger
+
 ## Build and Run
 
 * Run this in MQDH: `adb shell setprop debug.oculus.experimentalEnabled 1`
