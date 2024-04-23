@@ -6,10 +6,10 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 0
-    path: Assets/Scenes/SampleScene.unity
+    path: Assets/App/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
-    path: Assets/Scenes/MRTK-testing.unity
+    path: Assets/App/Scenes/MRTK-testing.unity
     guid: 27994ce61ae49df4c8735d6f849e081e
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: e134d59531a2bdb42a117989efba0eee,

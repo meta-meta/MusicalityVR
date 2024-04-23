@@ -71,4 +71,7 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
-
+# git clone git@github.com:meta-meta/UnityDevTools.git DevTools
+/Assets/DevTools
+/Assets/DevTools.meta
+uDesktopDuplication.log
