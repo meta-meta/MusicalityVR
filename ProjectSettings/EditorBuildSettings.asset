@@ -5,18 +5,12 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: Assets/App/Scenes/SampleScene.unity
-    guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
-    path: Assets/App/Scenes/MRTK-testing.unity
-    guid: 27994ce61ae49df4c8735d6f849e081e
+    path: Assets/Scenes/App.unity
+    guid: 99c9720ab356a0642a771bea13969a05
   m_configObjects:
-    Unity.XR.Oculus.Settings: {fileID: 11400000, guid: e134d59531a2bdb42a117989efba0eee,
-      type: 2}
-    com.unity.xr.arfoundation.simulation_settings: {fileID: 11400000, guid: 483d2b724f80f9844b397a2ac5b76412,
-      type: 2}
-    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 7fc9d2f22680f934886e2d73027ee2b4,
-      type: 2}
-    com.unity.xr.openxr.settings4: {fileID: 11400000, guid: b5cd51e272e05544c98f062ec4b211da,
-      type: 2}
+    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+    com.unity.xr.arfoundation.simulation_settings: {fileID: 11400000, guid: 8ce7f4c9ba454964e9c1ec0486ecdafb, type: 2}
+    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 973f14cd558c058438641ae29711322c, type: 2}
+    com.unity.xr.openxr.settings4: {fileID: 11400000, guid: 03773186760da3e489f4edcf7e023832, type: 2}
+  m_UseUCBPForAssetBundles: 0
