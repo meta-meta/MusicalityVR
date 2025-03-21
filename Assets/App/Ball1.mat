@@ -29,13 +29,14 @@ Material:
   - _DISABLE_ALBEDO_MAP
   - _SPECULAR_HIGHLIGHTS
   - _USE_WORLD_SCALE
+  - _VERTEX_EXTRUSION
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: 2000
   stringTagMap:
-    DisableBatching: False
+    DisableBatching: true
     RenderType: Opaque
   disabledShaderPasses:
   - MOTIONVECTORS
@@ -125,6 +126,8 @@ Material:
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
     - _BlendOp: 0
+    - _BlendOpAlpha: 3
+    - _BlendOpColor: 15
     - _BlendedClippingWidth: 0
     - _BlurBorderIntensity: 0
     - _BlurMode: 0
@@ -201,8 +204,8 @@ Material:
     - _RenderQueueOverride: -1
     - _RimLight: 0
     - _RimPower: 0.25
-    - _RoundCornerMargin: 0.01
-    - _RoundCornerRadius: 0.25
+    - _RoundCornerMargin: 2.05
+    - _RoundCornerRadius: -1.09
     - _RoundCorners: 0
     - _RoundCornersHideInterior: 0
     - _Smoothness: 0
@@ -220,10 +223,11 @@ Material:
     - _TriplanarMappingBlendSharpness: 4
     - _UseWorldScale: 1
     - _VertexColors: 0
-    - _VertexExtrusion: 0
+    - _VertexExtrusion: 1
     - _VertexExtrusionConstantWidth: 0
     - _VertexExtrusionSmoothNormals: 0
     - _VertexExtrusionValue: 0
+    - _WireThickness: 100
     - _WorkflowMode: 1
     - _ZOffsetFactor: 0
     - _ZOffsetUnits: 0
