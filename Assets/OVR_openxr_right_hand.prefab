@@ -267,7 +267,7 @@ GameObject:
   - component: {fileID: 7423030800101051894}
   - component: {fileID: 2172763580292799815}
   m_Layer: 2
-  m_Name: GameObject
+  m_Name: Col
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -281,12 +281,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1786051341284608249}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0.000000021855694, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: -0.0009999999, y: 0.0009999999, z: 0.0009999999}
+  m_LocalScale: {x: -0.099999994, y: 0.099999994, z: 0.099999994}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 5446693289115484214}
+  m_Father: {fileID: 3973969148631863464}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &7423030800101051894
 BoxCollider:
@@ -672,6 +672,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 5942048454174377279}
   - {fileID: 5499070473167639758}
   - {fileID: 5446693289115484214}
   m_Father: {fileID: 0}
@@ -855,7 +856,6 @@ Transform:
   - {fileID: 3103993496388122979}
   - {fileID: 6356967279678601896}
   - {fileID: 4523630147034299841}
-  - {fileID: 5942048454174377279}
   m_Father: {fileID: 3973969148631863464}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6303298619132591738
