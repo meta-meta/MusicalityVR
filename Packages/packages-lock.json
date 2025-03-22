@@ -126,6 +126,14 @@
       "dependencies": {},
       "hash": "1e4ff5dd9cd8d4df317ec63d08072defb4d0295a"
     },
+    "com.sixthsensor.osc-simpl": {
+      "version": "file:com.sixthsensor.osc-simpl",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.unity.modules.ui": "1.0.0"
+      }
+    },
     "com.unity.ai.navigation": {
       "version": "2.0.5",
       "depth": 0,
@@ -442,6 +450,20 @@
         "com.unity.xr.legacyinputhelpers": "2.1.2"
       },
       "url": "https://packages.unity.com"
+    },
+    "jillejr.newtonsoft.json-for-unity.converters": {
+      "version": "1.6.3",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://npm.cloudsmith.io/jillejr/newtonsoft-json-for-unity"
+    },
+    "jp.keijiro.rtmidi": {
+      "version": "1.0.4",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://registry.npmjs.com"
     },
     "org.mixedrealitytoolkit.core": {
       "version": "file:../../MixedRealityToolkit-Unity/org.mixedrealitytoolkit.core",

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 80a4d09bcdc3f4a6bbe2c756cfe713d9
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 53710
+  packageName: Osc Simpl
+  packageVersion: 2.3.11
+  assetPath: Packages/com.sixthsensor.osc-simpl/Samples/Introductory Examples/03
+    RuntimeUI/RuntimeUI.unity
+  uploadId: 731451

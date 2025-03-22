@@ -6,6 +6,20 @@
       "scopes": [
         "com.atteneder"
       ]
+    },
+    {
+      "name": "Keijiro",
+      "url": "https://registry.npmjs.com",
+      "scopes": [
+        "jp.keijiro"
+      ]
+    },
+    {
+      "name": "Packages from jillejr",
+      "url": "https://npm.cloudsmith.io/jillejr/newtonsoft-json-for-unity/",
+      "scopes": [
+        "jillejr"
+      ]
     }
   ],
   "dependencies": {
@@ -25,6 +39,8 @@
     "com.unity.ugui": "2.0.0",
     "com.unity.visualscripting": "1.9.5",
     "com.unity.xr.openxr": "1.13.2",
+    "jillejr.newtonsoft.json-for-unity.converters": "1.6.3",
+    "jp.keijiro.rtmidi": "1.0.4",
     "org.mixedrealitytoolkit.core": "file:../../MixedRealityToolkit-Unity/org.mixedrealitytoolkit.core",
     "org.mixedrealitytoolkit.extendedassets": "file:../../MixedRealityToolkit-Unity/org.mixedrealitytoolkit.extendedassets",
     "org.mixedrealitytoolkit.input": "file:../../MixedRealityToolkit-Unity/org.mixedrealitytoolkit.input",
