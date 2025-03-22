@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: cd1a5fad241143647aa5403add1f9fd8
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 201037
+  packageName: Water Caustics Effect for URP v2
+  packageVersion: 2.1.2
+  assetPath: Assets/WaterCausticsModules/WaterCausticsEffect/ShaderFunctions/ForAmplifyShaderEditor.unitypackage
+  uploadId: 730241

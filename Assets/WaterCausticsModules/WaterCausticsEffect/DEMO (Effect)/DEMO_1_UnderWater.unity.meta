@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: d2d2f7b9ac963ff429c287e5afecee7b
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 201037
+  packageName: Water Caustics Effect for URP v2
+  packageVersion: 2.1.2
+  assetPath: Assets/WaterCausticsModules/WaterCausticsEffect/DEMO (Effect)/DEMO_1_UnderWater.unity
+  uploadId: 730241
