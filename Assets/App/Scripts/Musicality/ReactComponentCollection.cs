@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Microsoft.MixedReality.Toolkit.Utilities;
+using Microsoft.MixedReality.Toolkit;
 using Newtonsoft.Json;
 using UnityEngine;
 using Object = UnityEngine.Object;

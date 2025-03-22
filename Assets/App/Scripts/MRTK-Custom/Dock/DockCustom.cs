@@ -4,6 +4,7 @@
 using System;
 using System.Collections.ObjectModel;
 using Microsoft.MixedReality.Toolkit;
+using MixedReality.Toolkit;
 using UnityEngine;
 using UnityEngine.Assertions;
 

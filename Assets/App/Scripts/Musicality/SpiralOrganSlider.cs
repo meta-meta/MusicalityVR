@@ -1,11 +1,11 @@
-using Microsoft.MixedReality.Toolkit.UI;
+using MixedReality.Toolkit.SpatialManipulation;
 using UnityEngine;
 
 namespace Musicality
 {
     public class SpiralOrganSlider : MonoBehaviour
     {
-        private Microsoft.MixedReality.Toolkit.UI.ObjectManipulator _knobManipulator;
+        private ObjectManipulator _knobManipulator;
         private bool _isManipulatingKnob;
         public float Val { get; private set; }
         public delegate void ValueChangedDel(float val);
@@ -17,25 +17,7 @@ namespace Musicality
         
         private void OnEnable()
         {
-            _knobManipulator = GetComponent<Microsoft.MixedReality.Toolkit.UI.ObjectManipulator>();
-            _knobManipulator.OnManipulationEnded.AddListener(OnKnobManipulationEnded);
-            _knobManipulator.OnManipulationStarted.AddListener(OnKnobManipulationStart);
-        }
-
-        private void OnDisable()
-        {
-            _knobManipulator.OnManipulationEnded.RemoveListener(OnKnobManipulationEnded);
-            _knobManipulator.OnManipulationStarted.RemoveListener(OnKnobManipulationStart);
-        }
-
-        private void OnKnobManipulationStart(ManipulationEventData evtData)
-        {
-            _isManipulatingKnob = true;
-        }
-
-        private void OnKnobManipulationEnded(ManipulationEventData evtData)
-        {
-            _isManipulatingKnob = false;
+            _knobManipulator = GetComponent<ObjectManipulator>();
         }
 
         private void Start()
@@ -57,7 +39,7 @@ namespace Musicality
 
         private void Update()
         {
-            if (_isManipulatingKnob) SetPosition(transform.localPosition.z);
+            if (_knobManipulator.isSelected) SetPosition(transform.localPosition.z);
             else transform.localPosition = Vector3.forward * Mathf.Lerp(minZ, maxZ, Val);
 
             lineRen.SetPosition(0, transform.parent.TransformPoint(Vector3.forward * Mathf.Lerp(minZ, maxZ, Val)));

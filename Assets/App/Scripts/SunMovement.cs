@@ -1,8 +1,8 @@
-using System;
 using Microsoft.MixedReality.Toolkit;
-using Microsoft.MixedReality.Toolkit.UI;
-using Microsoft.MixedReality.Toolkit.Utilities;
+using MixedReality.Toolkit;
+using MixedReality.Toolkit.SpatialManipulation;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit.Interactors;
 
 namespace Musicality
 {
@@ -24,21 +24,17 @@ namespace Musicality
         [SerializeField] private FloatPicker skyHue;
         [SerializeField] private FloatPicker skyLum;
         [SerializeField] private FloatPicker skySat;
-        [SerializeField] private Microsoft.MixedReality.Toolkit.UI.ObjectManipulator manipulator;
+        [SerializeField] private ObjectManipulator manipulator;
         [SerializeField] private Tonnegg cycleRatio;
         [SerializeField] private Transform rotationContainer;
         [SerializeField] private float dayLengthMinutes;
         
         
-        private bool IsManip => _manipHand.IsMatch(Handedness.Any);
-        private Handedness _manipHand;
         private bool _useRatio;
         private NoteJI _cycleRatio = new NoteJI(1, 1);
 
         private void Awake()
         {
-            manipulator.OnManipulationStarted.AddListener(OnManipulationStart);
-            manipulator.OnManipulationEnded.AddListener(OnManipulationEnded);
             cycleRatio.NoteChanged += CycleRatioOnNoteChanged;
             
             atmosphere.OnChange += f => RenderSettings.skybox.SetFloat(AtmosphericThickness, f);
@@ -54,15 +50,6 @@ namespace Musicality
             _cycleRatio = note as NoteJI? ?? default;
         }
 
-        private void OnManipulationEnded(ManipulationEventData arg0)
-        {
-            _manipHand = Handedness.None;
-        }
-
-        private void OnManipulationStart(ManipulationEventData arg0)
-        {
-            _manipHand = arg0.Pointer.Controller.ControllerHandedness;
-        }
 
         private const float QuarterNote = 360f / (24 * 4); // 1/4 rev per quarter note at 1:1
 
@@ -81,19 +68,21 @@ namespace Musicality
             }
             
 
-            if (IsManip)
+            if (manipulator.isSelected)
             {
-                var toggleButton = _manipHand.IsLeft()
-                    ? OVRInput.RawButton.LHandTrigger
-                    : OVRInput.RawButton.RHandTrigger;
-                if (OVRInput.GetDown(toggleButton))
+                foreach (var interactor in manipulator.interactorsSelecting)
                 {
+                    var toggleButton = interactor.handedness == InteractorHandedness.Left
+                        ? OVRInput.RawButton.LHandTrigger
+                        : OVRInput.RawButton.RHandTrigger;
+                    
                     CameraCache.Main.clearFlags = CameraCache.Main.clearFlags == CameraClearFlags.Skybox
                         ? CameraClearFlags.SolidColor
                         : CameraClearFlags.Skybox;
+                    
                     Debug.LogWarning("TODO: enable/disable passthrough?");
                 }
-
+                
                 var sunScale = manipulator.HostTransform.localScale.x;
                 Debug.Log(sunScale);
                 RenderSettings.skybox.SetFloat(SunSize, Mathf.Clamp01(Mathf.Pow(sunScale - 0.01f, 2) * 10));

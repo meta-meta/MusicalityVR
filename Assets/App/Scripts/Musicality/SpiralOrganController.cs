@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using MixedReality.Toolkit.SpatialManipulation;
+using OscSimpl;
 using UnityEngine;
 
 namespace Musicality
@@ -306,7 +308,7 @@ namespace Musicality
                         
                         notePadCmp.ToggleNotePicker(false);
                         notePadCmp.transform.localScale = Vector3.one * latticeNoteScale;
-                        notePadCmp.GetComponent<Microsoft.MixedReality.Toolkit.UI.ObjectManipulator>().HostTransform =
+                        notePadCmp.GetComponent<ObjectManipulator>().HostTransform =
                             notesContainer;
 
                     }

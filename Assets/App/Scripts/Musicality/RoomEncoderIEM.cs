@@ -1,8 +1,9 @@
 using System.Collections.Generic;
-using Microsoft.MixedReality.Toolkit;
-using Microsoft.MixedReality.Toolkit.UI;
-using Microsoft.MixedReality.Toolkit.Utilities;
+using MixedReality.Toolkit;
+using MixedReality.Toolkit.SpatialManipulation;
+using OscSimpl;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit.Interactors;
 
 namespace Musicality
 {
@@ -21,7 +22,7 @@ namespace Musicality
             private RotationAxisConstraint _rotationAxisConstraint;
             private Vector3 _pos;
             public Collider Col;
-            public Microsoft.MixedReality.Toolkit.UI.ObjectManipulator Om;
+            public ObjectManipulator Om;
             public Transform Tr;
 
             public void Update()
@@ -74,7 +75,7 @@ namespace Musicality
                             : roomSize.y / 2,
                     pos.z * (roomSize.z / 2));
 
-                var om = gObj.AddComponent<Microsoft.MixedReality.Toolkit.UI.ObjectManipulator>();
+                var om = gObj.AddComponent<ObjectManipulator>();
 
                 if (isFloor) om.HostTransform = roomEncoder.transform;
 
@@ -170,39 +171,28 @@ namespace Musicality
             _wallAttenuationRight = new OscMessage($"/RoomEncoder/wallAttenuationRight");
             _wallAttenuationCeiling = new OscMessage($"/RoomEncoder/wallAttenuationCeiling");
             _wallAttenuationFloor = new OscMessage($"/RoomEncoder/wallAttenuationFloor");
-
-            _floor.Om.OnManipulationStarted.AddListener(FloorManipulationStart);
-            _floor.Om.OnManipulationEnded.AddListener(FloorManipulationEnd);
         }
 
-        private Handedness _floorManipHand;
-        private bool IsFloorManip => _floorManipHand.IsMatch(Handedness.Any);
         public bool isLocked;
-
-        void FloorManipulationStart(ManipulationEventData arg0)
-        {
-            var handedness = arg0.Pointer.Controller?.ControllerHandedness ?? Handedness.None;
-            _floorManipHand = _floorManipHand.IsNone() ? handedness : Handedness.Both;
-        }
-
-        void FloorManipulationEnd(ManipulationEventData arg0)
-        {
-            _floorManipHand = Handedness.None;
-        }
 
         // Update is called once per frame
         void FixedUpdate()
         {
-            if (IsFloorManip)
+            if (_floor.Om.isSelected)
             {
-                var lockToggleButton = _floorManipHand.IsLeft()
-                    ? OVRInput.RawButton.LHandTrigger
-                    : OVRInput.RawButton.RHandTrigger;
-                if (OVRInput.GetDown(lockToggleButton))
+                foreach (var interactor in _floor.Om.interactorsSelecting)
                 {
-                    isLocked = !isLocked;
-                    _floor.Om.ForceEndManipulation(); // prevent lerp to old position when locking
-                    foreach (var wall in _walls) wall.SetIsLocked(isLocked);
+                    var lockToggleButton = interactor.handedness == InteractorHandedness.Left
+                        ? OVRInput.RawButton.LHandTrigger
+                        : OVRInput.RawButton.RHandTrigger;
+                    
+                    if (OVRInput.GetDown(lockToggleButton))
+                    {
+                        isLocked = !isLocked;
+                        Debug.LogWarning("Fixme. used to be _floor.Om.ForceEndManipulation();");
+                        // _floor.Om.ForceEndManipulation(); // prevent lerp to old position when locking
+                        foreach (var wall in _walls) wall.SetIsLocked(isLocked);
+                    }
                 }
             }
             

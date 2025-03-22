@@ -1,5 +1,4 @@
-﻿using Microsoft.MixedReality.Toolkit.Utilities;
-using Microsoft.MixedReality.Toolkit.Utilities.Solvers;
+﻿using MixedReality.Toolkit.SpatialManipulation;
 using MRTK_Custom.Dock;
 using UnityEngine;
 

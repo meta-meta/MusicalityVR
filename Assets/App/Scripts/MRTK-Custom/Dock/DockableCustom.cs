@@ -3,18 +3,17 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.MixedReality.Toolkit;
-using Microsoft.MixedReality.Toolkit.UI;
-using Microsoft.MixedReality.Toolkit.Utilities.Solvers;
+using MixedReality.Toolkit;
+using MixedReality.Toolkit.SpatialManipulation;
+using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.Assertions;
-using DockingState = MRTK_Custom.Dock.DockingState;
-
+using UnityEngine.XR.Interaction.Toolkit;
 
 namespace MRTK_Custom.Dock
 {
     /// <summary>
-    /// Add a Dockable component to any object that has a <see cref="DockableCustom"/> and an <see cref="Microsoft.MixedReality.Toolkit.UI.ObjectManipulator"/>
+    /// Add a Dockable component to any object that has a <see cref="DockableCustom"/> and an <see cref="ObjectManipulator"/>
     /// or <see cref="Microsoft.MixedReality.Toolkit.UI.ManipulationHandler"/> to make it dockable in Docks. That allows this object to be used
     /// as part of a palette, shelf or navigation bar together with other objects.
     /// </summary>
@@ -57,8 +56,7 @@ namespace MRTK_Custom.Dock
         private HashSet<DockPositionCustom> overlappingPositions = new HashSet<DockPositionCustom>();
         private Vector3 originalScale = Vector3.one;
         private bool isDragging = false;
-        private Microsoft.MixedReality.Toolkit.UI.ObjectManipulator objectManipulator;
-        private ManipulationHandler manipulationHandler;
+        private ObjectManipulator objectManipulator;
 
 
         public Action<DockPositionCustom> OnDocked;
@@ -71,24 +69,9 @@ namespace MRTK_Custom.Dock
         /// </summary>
         private void OnEnable()
         {
-            objectManipulator = gameObject.GetComponent<Microsoft.MixedReality.Toolkit.UI.ObjectManipulator>();
-            if (objectManipulator != null)
-            {
-                objectManipulator.OnManipulationStarted.AddListener(OnManipulationStarted);
-                objectManipulator.OnManipulationEnded.AddListener(OnManipulationEnded);
-            }
-            else
-            {
-                manipulationHandler = gameObject.GetComponent<ManipulationHandler>();
-                if (manipulationHandler != null)
-                {
-                    manipulationHandler.OnManipulationStarted.AddListener(OnManipulationStarted);
-                    manipulationHandler.OnManipulationEnded.AddListener(OnManipulationEnded);
-                }
-            }
-
-            Assert.IsTrue(objectManipulator != null || manipulationHandler != null,
-                "A Dockable object must have either an ObjectManipulator or a ManipulationHandler component.");
+            objectManipulator = gameObject.GetComponent<ObjectManipulator>();
+            objectManipulator.selectEntered.AddListener(OnSelectEntered);
+            objectManipulator.selectExited.AddListener(OnSelectExited);
 
             Assert.IsNotNull(gameObject.GetComponent<Collider>(), "A Dockable object must have a Collider component.");
         }
@@ -98,21 +81,9 @@ namespace MRTK_Custom.Dock
         /// </summary>
         private void OnDisable()
         {
-            if (objectManipulator != null)
-            {
-                objectManipulator.OnManipulationStarted.RemoveListener(OnManipulationStarted);
-                objectManipulator.OnManipulationEnded.RemoveListener(OnManipulationEnded);
-
-                objectManipulator = null;
-            }
-
-            if (manipulationHandler != null)
-            {
-                manipulationHandler.OnManipulationStarted.RemoveListener(OnManipulationStarted);
-                manipulationHandler.OnManipulationEnded.RemoveListener(OnManipulationEnded);
-
-                manipulationHandler = null;
-            }
+            objectManipulator.selectEntered.RemoveListener(OnSelectEntered);
+            objectManipulator.selectExited.RemoveListener(OnSelectExited);
+            objectManipulator = null;
 
             if (dockedPosition != null)
             {
@@ -122,6 +93,19 @@ namespace MRTK_Custom.Dock
 
             overlappingPositions.Clear();
             dockingState = DockingState.Undocked;
+        }
+        
+        // from MRTK2 QuaternionExtensions
+        /// <summary>
+        /// Determines if the angle between two quaternions is within a given tolerance.
+        /// </summary>
+        /// <param name="q1">The first quaternion.</param>
+        /// <param name="q2">The second quaternion.</param>
+        /// <param name="angleTolerance">The maximum angle that will cause this to return true.</param>
+        /// <returns>True if the quaternions are aligned within the tolerance, false otherwise.</returns>
+        public static bool AlignedEnough(Quaternion q1, Quaternion q2, float angleTolerance)
+        {
+            return Mathf.Abs(Quaternion.Angle(q1, q2)) < angleTolerance;
         }
 
         /// <summary>
@@ -155,8 +139,8 @@ namespace MRTK_Custom.Dock
 
                 transform.localScale = Solver.SmoothTo(transform.localScale, dockedPositionScale, Time.deltaTime, lerpTime);
 
-                if (VectorExtensions.CloseEnough(dockedPosition.transform.position, transform.position, DistanceTolerance) &&
-                    QuaternionExtensions.AlignedEnough(dockedPosition.transform.rotation, transform.rotation, AngleTolerance) &&
+                if (VectorExtensions.CloseEnoughTo(dockedPosition.transform.position, transform.position, DistanceTolerance) &&
+                    AlignedEnough(dockedPosition.transform.rotation, transform.rotation, AngleTolerance) &&
                     AboutTheSameSize(dockedPositionScale.x, transform.localScale.x))
                 {
                     // Finished docking
@@ -259,7 +243,7 @@ namespace MRTK_Custom.Dock
 
         #region Manipulation events
 
-        private void OnManipulationStarted(ManipulationEventData e)
+        private void OnSelectEntered(SelectEnterEventArgs arg0)
         {
             isDragging = true;
 
@@ -268,8 +252,8 @@ namespace MRTK_Custom.Dock
                 Undock();
             }
         }
-
-        private void OnManipulationEnded(ManipulationEventData e)
+        
+        private void OnSelectExited(SelectExitEventArgs arg0)
         {
             isDragging = false;
 

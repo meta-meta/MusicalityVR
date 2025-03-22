@@ -103,7 +103,7 @@ public class OkColorMenu : EditorWindow
         shades.mode = GradientMode.Fixed;
 
         OkColorMenu window = (OkColorMenu) EditorWindow.GetWindow (
-            t: typeof (OkColorMenu),
+            typeof (OkColorMenu),
             utility: false,
             title: "OkColor",
             focus : true);

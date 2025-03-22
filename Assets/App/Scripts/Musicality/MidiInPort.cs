@@ -1,16 +1,17 @@
+using System;
 using RtMidiDll = RtMidi.Unmanaged;
 
 namespace Musicality
 {
-    unsafe public sealed class MidiInPort : System.IDisposable
+    unsafe public sealed class MidiInPort : IDisposable
     {
         RtMidiDll.Wrapper* _rtmidi;
 
-        public System.Action<byte, byte, byte> OnNoteOn;
-        public System.Action<byte, byte> OnNoteOff;
-        public System.Action<byte, byte, byte> OnControlChange;
-        public System.Action OnClockPulse;
-        public System.Action<int> OnSPP;
+        public Action<byte, byte, byte> OnNoteOn;
+        public Action<byte, byte> OnNoteOff;
+        public Action<byte, byte, byte> OnControlChange;
+        public Action OnClockPulse;
+        public Action<int> OnSPP;
 
         public MidiInPort(int portNumber)
         {
@@ -23,7 +24,7 @@ namespace Musicality
                 RtMidiDll.OpenPort(_rtmidi, (uint)portNumber, "RtMidi In");
 
             if (_rtmidi == null || !_rtmidi->ok)
-                throw new System.InvalidOperationException("Failed to set up a MIDI input port.");
+                throw new InvalidOperationException("Failed to set up a MIDI input port.");
         }
 
         ~MidiInPort()
@@ -40,7 +41,7 @@ namespace Musicality
             RtMidiDll.InFree(_rtmidi);
             _rtmidi = null;
 
-            System.GC.SuppressFinalize(this);
+            GC.SuppressFinalize(this);
         }
 
         public void ProcessMessages()

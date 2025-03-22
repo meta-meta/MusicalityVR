@@ -1,3 +1,4 @@
+using MixedReality.Toolkit.SpatialManipulation;
 using TMPro;
 using UnityEngine;
 
@@ -6,7 +7,7 @@ namespace Musicality
     public class Spawner : MonoBehaviour, IReactComponent<Spawner.State>
     {
         [SerializeField] private GameObject viz;
-        [SerializeField] private Microsoft.MixedReality.Toolkit.UI.ObjectManipulator objectManipulator;
+        [SerializeField] private ObjectManipulator objectManipulator;
         [SerializeField] private TextMeshPro label;
         
         private Spawner.State _state;

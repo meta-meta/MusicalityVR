@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.MixedReality.Toolkit;
-using Microsoft.MixedReality.Toolkit.UI;
-using Microsoft.MixedReality.Toolkit.Utilities;
+using MixedReality.Toolkit;
+using MixedReality.Toolkit.SpatialManipulation;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
 
 namespace Musicality
 {
@@ -13,7 +13,7 @@ namespace Musicality
         [SerializeField] private bool isCircleForced;
         [SerializeField] private float heightPerRevolution = 0.25f;
         [SerializeField] protected GameObject knobVisual;
-        [SerializeField] protected Microsoft.MixedReality.Toolkit.UI.ObjectManipulator knobManipulator;
+        [SerializeField] protected ObjectManipulator knobManipulator;
         private HashSet<float> _anglesDeg;
         private Material _material;
         private bool IsCircle => isCircleForced || _anglesDeg.Any() && _anglesDeg.All(a => a <= 360f);
@@ -56,8 +56,8 @@ namespace Musicality
         private void OnEnable()
         {
             RefreshData();
-            knobManipulator.OnManipulationEnded.AddListener(OnKnobManipulationEnded);
-            knobManipulator.OnManipulationStarted.AddListener(OnKnobManipulationStart);
+            knobManipulator.selectEntered.AddListener(OnKnobManipulationStart);
+            knobManipulator.selectExited.AddListener(OnKnobManipulationEnded);
         }
 
         private void OnValidate()
@@ -165,15 +165,15 @@ namespace Musicality
 
         private void OnDisable()
         {
-            knobManipulator.OnManipulationEnded.RemoveListener(OnKnobManipulationEnded);
-            knobManipulator.OnManipulationStarted.RemoveListener(OnKnobManipulationStart);
+            knobManipulator.selectEntered.RemoveListener(OnKnobManipulationStart);
+            knobManipulator.selectExited.RemoveListener(OnKnobManipulationEnded);
         }
 
         private Handedness _handedness;
 
         public void Vibe()
         {
-            var controller = _handedness.IsLeft() ? OVRInput.Controller.LTouch : OVRInput.Controller.RTouch;
+            var controller = _handedness == Handedness.Left ? OVRInput.Controller.LTouch : OVRInput.Controller.RTouch;
             OVRInput.SetControllerVibration(1f, .1f, controller);
             CancelInvoke(nameof(VibeOff));
             Invoke(nameof(VibeOff), .05f);
@@ -181,19 +181,19 @@ namespace Musicality
 
         private void VibeOff()
         {
-            var controller = _handedness.IsLeft() ? OVRInput.Controller.LTouch : OVRInput.Controller.RTouch;
+            var controller = _handedness == Handedness.Left ? OVRInput.Controller.LTouch : OVRInput.Controller.RTouch;
             OVRInput.SetControllerVibration(0, 0, controller);
         }
 
-        void OnKnobManipulationStart(ManipulationEventData evtData)
+        void OnKnobManipulationStart(SelectEnterEventArgs args)
         {
             _isManipulatingKnob = true;
-            _handedness = evtData.Pointer.Controller.ControllerHandedness;
+            _handedness = args.interactorObject.handedness.ToHandedness();
             knobManipulator.GetComponent<MeshRenderer>().enabled = true;
             lineRenSpiralKnobToGrabbable.enabled = true;
         }
 
-        void OnKnobManipulationEnded(ManipulationEventData evtData)
+        void OnKnobManipulationEnded(SelectExitEventArgs args)
         {
             _isManipulatingKnob = false;
             knobManipulator.GetComponent<MeshRenderer>().enabled = false;

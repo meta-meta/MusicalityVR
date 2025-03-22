@@ -1,7 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using OscSimpl;
 using UnityEngine;
-
 
 public class OscAddressChanger : MonoBehaviour
 {
@@ -9,9 +7,8 @@ public class OscAddressChanger : MonoBehaviour
     private OscOut _oscOut;
     private int _port;
     private string _ip;
-    
-    // Start is called before the first frame update
-    void Start()
+
+    private void Start()
     {
         var oscObj = GameObject.Find("OSC");
         _oscIn = oscObj.GetComponent<OscIn>();
@@ -30,14 +27,5 @@ public class OscAddressChanger : MonoBehaviour
             _oscOut.Close();
             _oscOut.Open(_port, _ip);
         }));
-        
-    }
-    
-    
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

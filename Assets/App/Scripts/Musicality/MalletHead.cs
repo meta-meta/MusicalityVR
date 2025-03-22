@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
-using Microsoft.MixedReality.Toolkit;
-using Microsoft.MixedReality.Toolkit.Utilities;
+using MixedReality.Toolkit;
 using UnityEngine;
 
 namespace Musicality
@@ -18,7 +17,7 @@ namespace Musicality
         public static Action<MalletHead> OnMalletDestroy;
     
         public OVRInput.Controller Controller =>
-            _holdable.Handedness.IsLeft() ? OVRInput.Controller.LTouch : OVRInput.Controller.RTouch;
+            _holdable.Handedness == Handedness.Left ? OVRInput.Controller.LTouch : OVRInput.Controller.RTouch;
 
         public Vector3 velocityVec => GetComponent<VelocityProbe>().velocityVec;
 

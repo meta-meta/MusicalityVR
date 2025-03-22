@@ -2,17 +2,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.MixedReality.Toolkit;
-using Microsoft.MixedReality.Toolkit.Input;
-using Microsoft.MixedReality.Toolkit.Utilities;
+using MixedReality.Toolkit;
+using MixedReality.Toolkit.SpatialManipulation;
 using MRTK_Custom.Dock;
 using Newtonsoft.Json;
+using OscSimpl;
 using TMPro;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit.Interactors;
 
 namespace Musicality
 {
-    public class Tonnegg : MonoBehaviour, IMixedRealityFocusHandler, IReactComponent<Tonnegg.State>
+    public class Tonnegg : MonoBehaviour, IReactComponent<Tonnegg.State>
     {
         #region Inspector
 
@@ -29,13 +30,14 @@ namespace Musicality
 
         [Header("Component Refs")]
         
+        [SerializeField] private CapsuleCollider col;
+        [SerializeField] private List<Material> materials;
+        [SerializeField] private ObjectManipulator objectManipulator;
         [SerializeField] private SpiralNotePicker notePicker;
         [SerializeField] private TextMeshPro pitchClassLabel;
         [SerializeField] private TextMeshPro sub; // optional
         [SerializeField] private TextMeshPro sup;
-        [SerializeField] private CapsuleCollider col;
         [SerializeField] private Transform visual;
-        [SerializeField] private List<Material> materials;
 
         private bool _areRefsSetup;
 
@@ -55,6 +57,7 @@ namespace Musicality
             if (sub == null) sub = transform.Find("sub")?.GetComponent<TextMeshPro>();
             if (sup == null) sup = transform.Find("sup")?.GetComponent<TextMeshPro>();
             if (col == null) col = GetComponent<CapsuleCollider>();
+            if (objectManipulator == null) objectManipulator = GetComponent<ObjectManipulator>();
             _velocityProbe = transform.EnsureComponent<VelocityProbe>();
             _areRefsSetup = true;
             notePicker = GetComponentInChildren<SpiralNotePicker>();
@@ -152,18 +155,21 @@ namespace Musicality
                 _malletHead.Vibe(_velCurrent * velMultVibe, false);
             }
 
-            if (Input.GetMouseButtonDown(1) && _focusHandedness != Handedness.None && notePicker)
+            if (Input.GetMouseButtonDown(1) && objectManipulator.isHovered && notePicker)
                 ToggleNotePicker(!notePicker.gameObject.activeSelf);
 
-            if (_isFocusedWithController)
+            if (objectManipulator.isHovered)
             {
-                var isButtonDown = OVRInput.GetDown(_focusHandedness.IsLeft()
-                    ? OVRInput.RawButton.X
-                    : OVRInput.RawButton.A);
+                foreach (var interactor in objectManipulator.interactorsHovering)
+                {
+                    var isButtonDown = OVRInput.GetDown(interactor.handedness == InteractorHandedness.Left
+                        ? OVRInput.RawButton.X
+                        : OVRInput.RawButton.A);
 
-                var isMouseButton = Input.GetMouseButtonDown(1);
+                    var isMouseButton = Input.GetMouseButtonDown(1);
 
-                if (isButtonDown && notePicker) ToggleNotePicker(!notePicker.gameObject.activeSelf);
+                    if (isButtonDown && notePicker) ToggleNotePicker(!notePicker.gameObject.activeSelf);
+                }
             }
         }
 
@@ -409,25 +415,6 @@ namespace Musicality
             _meshRenderer.SetPropertyBlock(_materialPropertyBlock);
         }
         
-        #endregion
-
-        #region IMixedRealityFocusHandler
-
-        private Handedness _focusHandedness;
-        private bool _isFocusedWithController;
-
-        public void OnFocusEnter(FocusEventData eventData)
-        {
-            _focusHandedness = eventData.Pointer.Controller.ControllerHandedness;
-            _isFocusedWithController = eventData.Pointer.Controller.InputSource.SourceType == InputSourceType.Controller;
-        }
-
-        public void OnFocusExit(FocusEventData eventData)
-        {
-            _focusHandedness = Handedness.None;
-            _isFocusedWithController = false;
-        }
-
         #endregion
 
         #region IReactComponent

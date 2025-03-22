@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.MixedReality.Toolkit;
-using Microsoft.MixedReality.Toolkit.Utilities;
+using MixedReality.Toolkit;
 using Shapes;
 using TMPro;
 using UnityEngine;

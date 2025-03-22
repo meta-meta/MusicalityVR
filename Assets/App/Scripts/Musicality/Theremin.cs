@@ -1,8 +1,8 @@
-﻿using System;
-using Microsoft.MixedReality.Toolkit.UI;
-using UnityEditor;
+﻿using MixedReality.Toolkit.SpatialManipulation;
+using OscSimpl;
 using UnityEngine;
-using UnityEngine.Serialization;
+using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 namespace Musicality
 {
@@ -13,7 +13,7 @@ namespace Musicality
         [SerializeField] private FloatPicker freqDistMinPicker;
         [SerializeField] private FloatPicker noisePicker;
         [SerializeField] private FloatPicker voicePicker;
-        [SerializeField] private Interactable powerSwitch;
+        [SerializeField] private XRSimpleInteractable powerSwitch;
         [SerializeField] private Transform ampObj;
         [SerializeField] private Transform freqObj;
         [SerializeField] private Transform freqObjBot;
@@ -95,7 +95,7 @@ namespace Musicality
 
             _objManipulator = GetComponent<ObjectManipulator>();
         
-            powerSwitch.OnClick.AddListener(OnPowerButtonClick);
+            powerSwitch.selectEntered.AddListener(OnPowerButtonClick);
 
             dutyCyclePicker.OnChange += f =>
             {
@@ -116,7 +116,7 @@ namespace Musicality
             };
         }
 
-        private void OnPowerButtonClick()
+        private void OnPowerButtonClick(SelectEnterEventArgs args)
         {
             isOn = !isOn;
         }

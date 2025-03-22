@@ -153,7 +153,7 @@ public class Manipulate : MonoBehaviour
                     if (!IsKinematic)
                     {
                         _rigidbody.isKinematic = false;
-                        _rigidbody.velocity = _malletHeadGrab.velocityVec;
+                        _rigidbody.linearVelocity = _malletHeadGrab.velocityVec;
                     }
                     _rigidbody.useGravity = UseGravity;
                 }

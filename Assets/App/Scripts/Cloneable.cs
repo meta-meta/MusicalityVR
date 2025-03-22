@@ -1,19 +1,16 @@
 using System;
-using Microsoft.MixedReality.Toolkit;
-using Microsoft.MixedReality.Toolkit.Input;
-using Microsoft.MixedReality.Toolkit.UI;
-using Microsoft.MixedReality.Toolkit.Utilities;
+using MixedReality.Toolkit;
+using MixedReality.Toolkit.SpatialManipulation;
 using UnityEngine;
-using UnityEngine.Serialization;
+using UnityEngine.XR.Interaction.Toolkit;
 
 namespace Musicality
 {
     public abstract class Cloneable<T> : MonoBehaviour
     {
-        [SerializeField] private Microsoft.MixedReality.Toolkit.UI.ObjectManipulator objectManipulator;
+        [SerializeField] private ObjectManipulator objectManipulator;
         private Handedness _handedness;
         private bool _isBeingManipulated;
-        private bool _isController;
         private bool _isFocused;
         public Action<IReactComponent<T>> onClone;
         public Action<float, float> onThumbstickAngleMagnitude;
@@ -23,40 +20,53 @@ namespace Musicality
         
         private void OnEnable()
         {
-            objectManipulator.OnManipulationStarted.AddListener(OnManipulationStart);
-            objectManipulator.OnManipulationEnded.AddListener(OnManipulationEnd);
+            objectManipulator.selectEntered.AddListener(OnSelectEntered);
+            objectManipulator.selectExited.AddListener(OnSelectExited);
+        }
+
+        private void OnSelectExited(SelectExitEventArgs args)
+        {
+            _isBeingManipulated = false;
+        }
+
+        private void OnSelectEntered(SelectEnterEventArgs args)
+        {
+            
+            _isBeingManipulated = true;
+            _trAtManipulationStart = new SerializableTransform(transform);
+            _handedness = args.interactorObject.handedness.ToHandedness();
         }
 
         private void OnDisable()
         {
-            objectManipulator.OnManipulationStarted.RemoveListener(OnManipulationStart);
-            objectManipulator.OnManipulationEnded.RemoveListener(OnManipulationEnd);
+            objectManipulator.selectEntered.RemoveListener(OnSelectEntered);
+            objectManipulator.selectExited.RemoveListener(OnSelectExited);
         }
 
         private SerializableTransform _trAtManipulationStart;
         
-        private void OnManipulationStart(ManipulationEventData eventData)
-        {
-            _isBeingManipulated = true;
-            _trAtManipulationStart = new SerializableTransform(transform);
-            _handedness = eventData.Pointer.Controller.ControllerHandedness;
-            _isController = eventData.Pointer.Controller.InputSource.SourceType == InputSourceType.Controller;
-        }
-
-        private void OnManipulationEnd(ManipulationEventData eventData)
-        {
-            _isBeingManipulated = false;
-        }
+        // private void OnManipulationStart(ManipulationEventData eventData)
+        // {
+        //     _isBeingManipulated = true;
+        //     _trAtManipulationStart = new SerializableTransform(transform);
+        //     _handedness = eventData.Pointer.Controller.ControllerHandedness;
+        //     _isController = eventData.Pointer.Controller.InputSource.SourceType == InputSourceType.Controller;
+        // }
+        //
+        // private void OnManipulationEnd(ManipulationEventData eventData)
+        // {
+        //     _isBeingManipulated = false;
+        // }
 
         private void Update()
         {
             if (_isBeingManipulated)
             {
-                var isThumbstickButtonDown = OVRInput.GetDown(_handedness.IsLeft()
+                var isThumbstickButtonDown = OVRInput.GetDown(_handedness == Handedness.Left
                     ? OVRInput.RawButton.LThumbstick
                     : OVRInput.RawButton.RThumbstick);
                 
-                var isDeleteButtonDown = OVRInput.GetDown(_handedness.IsLeft()
+                var isDeleteButtonDown = OVRInput.GetDown(_handedness == Handedness.Left
                     ? OVRInput.RawButton.Y
                     : OVRInput.RawButton.B);
 
@@ -66,7 +76,7 @@ namespace Musicality
                 if (isDeleteButtonDown || Input.GetKeyDown(KeyCode.Delete))
                     Delete();
 
-                var thumbstickPos = OVRInput.Get(_handedness.IsLeft()
+                var thumbstickPos = OVRInput.Get(_handedness == Handedness.Left
                     ? OVRInput.RawAxis2D.LThumbstick
                     : OVRInput.RawAxis2D.RThumbstick);
                 

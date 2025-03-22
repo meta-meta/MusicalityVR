@@ -1,9 +1,10 @@
+using System;
 using Marshal = System.Runtime.InteropServices.Marshal;
 using RtMidiDll = RtMidi.Unmanaged;
 
 namespace Musicality
 {
-    unsafe public sealed class MidiProbe : System.IDisposable
+    unsafe public sealed class MidiProbe : IDisposable
     {
         public enum Mode { In, Out }
 
@@ -20,7 +21,7 @@ namespace Musicality
             _mode = mode;
 
             if (_rtmidi == null || !_rtmidi->ok)
-                throw new System.InvalidOperationException("Failed to create a MIDI client.");
+                throw new InvalidOperationException("Failed to create a MIDI client.");
         }
 
         ~MidiProbe()
@@ -44,7 +45,7 @@ namespace Musicality
 
             _rtmidi = null;
 
-            System.GC.SuppressFinalize(this);
+            GC.SuppressFinalize(this);
         }
 
         public int PortCount {

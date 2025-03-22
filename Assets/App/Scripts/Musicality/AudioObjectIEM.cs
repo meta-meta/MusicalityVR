@@ -1,5 +1,5 @@
-﻿using System;
-using Microsoft.MixedReality.Toolkit.UI;
+﻿using MixedReality.Toolkit.SpatialManipulation;
+using OscSimpl;
 using TMPro;
 using UnityEngine;
 
@@ -16,14 +16,13 @@ namespace Musicality
         [SerializeField] private int PortOut;
         private SpiralVolumePicker _volumePicker;
         private Material _material;
-        private Microsoft.MixedReality.Toolkit.UI.ObjectManipulator _manipulator;
+        private ObjectManipulator _manipulator;
         private OscIn _oscInRoomEncoder;
         private OscMessage _roomX;
         private OscMessage _roomY;
         private OscMessage _roomZ;
         private OscOut _oscOutRoomEncoder;
         private Vector3 _pos;
-        private bool _isGrabbed;
         private static readonly OscMessage SourceX = new OscMessage($"/RoomEncoder/sourceX");
         private static readonly OscMessage SourceY = new OscMessage($"/RoomEncoder/sourceY");
         private static readonly OscMessage SourceZ = new OscMessage($"/RoomEncoder/sourceZ");
@@ -39,7 +38,7 @@ namespace Musicality
     
         private void Awake()
         {
-            _manipulator = GetComponent<Microsoft.MixedReality.Toolkit.UI.ObjectManipulator>();
+            _manipulator = GetComponent<ObjectManipulator>();
             _meshRenderer = GetComponent<MeshRenderer>();
             _materialPropertyBlock = new MaterialPropertyBlock();
             _volumePicker = GetComponentInChildren<SpiralVolumePicker>();
@@ -47,8 +46,6 @@ namespace Musicality
 
         private void OnEnable()
         {
-            _manipulator.OnManipulationStarted.AddListener(OnManipulationStart);
-            _manipulator.OnManipulationEnded.AddListener(OnManipulationEnd);
             if (_volumePicker) _volumePicker.OnVolumeChange += OnVolumeChange;
         }
 
@@ -57,21 +54,9 @@ namespace Musicality
             LightSet(val);
         }
 
-        private void OnManipulationEnd(ManipulationEventData arg0)
-        {
-            _isGrabbed = false;
-        }
-
         private void OnDisable()
         {
-            _manipulator.OnManipulationStarted.RemoveListener(OnManipulationStart);
-            _manipulator.OnManipulationEnded.RemoveListener(OnManipulationEnd);
             if (_volumePicker) _volumePicker.OnVolumeChange -= OnVolumeChange;
-        }
-
-        private void OnManipulationStart(ManipulationEventData arg0)
-        {
-            _isGrabbed = true;
         }
 
         private void Start()
@@ -110,7 +95,7 @@ namespace Musicality
 
         void OnReceiveSourceX(float val)
         {
-            if (!_isGrabbed)
+            if (!_manipulator.isSelected)
             {
                 transform.position = new Vector3(transform.position.x, transform.position.y, val);
             }
@@ -118,7 +103,7 @@ namespace Musicality
 
         void OnReceiveSourceY(float val)
         {
-            if (!_isGrabbed)
+            if (!_manipulator.isSelected)
             {
                 transform.position = new Vector3(-val, transform.position.y, transform.position.z);
             }
@@ -126,7 +111,7 @@ namespace Musicality
 
         void OnReceiveSourceZ(float val)
         {
-            if (!_isGrabbed)
+            if (!_manipulator.isSelected)
             {
                 transform.position = new Vector3(transform.position.x, val, transform.position.z);
             }
@@ -179,7 +164,7 @@ namespace Musicality
 
         private void FixedUpdate()
         {
-            if (_isGrabbed || AlwaysSendPosition)
+            if (_manipulator.isSelected || AlwaysSendPosition)
             {
                 SendPositionToRoomEncoder();
             }

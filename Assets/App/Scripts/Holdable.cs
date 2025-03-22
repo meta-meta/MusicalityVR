@@ -1,15 +1,13 @@
-using Microsoft.MixedReality.Toolkit;
-using Microsoft.MixedReality.Toolkit.Input;
-using Microsoft.MixedReality.Toolkit.UI;
-using Microsoft.MixedReality.Toolkit.Utilities;
-using Microsoft.MixedReality.Toolkit.Utilities.Solvers;
+using MixedReality.Toolkit;
+using MixedReality.Toolkit.SpatialManipulation;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
 
 namespace Musicality
 {
-    public class Holdable : MonoBehaviour, IMixedRealityFocusHandler
+    public class Holdable : MonoBehaviour
     {
-        [SerializeField] private Microsoft.MixedReality.Toolkit.UI.ObjectManipulator _objectManipulator;
+        [SerializeField] private ObjectManipulator _objectManipulator;
         [SerializeField] private Orbital _orbital;
         [SerializeField] private SolverHandler _solverHandler;
         [SerializeField] private float doubleGripSeconds = 0.4f;
@@ -24,55 +22,67 @@ namespace Musicality
 
         private void OnEnable()
         {
-            _objectManipulator.OnManipulationStarted.AddListener(OnManipulationStart);
-            _objectManipulator.OnManipulationEnded.AddListener(OnManipulationEnd);
+            _objectManipulator.firstHoverEntered.AddListener(OnFirstHoverEntered);
+            _objectManipulator.lastHoverExited.AddListener(OnLastHoverExited);
+            _objectManipulator.selectEntered.AddListener(OnSelectEntered);
+            _objectManipulator.selectExited.AddListener(OnSelectExited);
         }
 
-        private void OnDisable()
-        {
-            _objectManipulator.OnManipulationStarted.RemoveListener(OnManipulationStart);
-            _objectManipulator.OnManipulationEnded.RemoveListener(OnManipulationEnd);
-        }
-
-        private void OnManipulationStart(ManipulationEventData eventData)
-        {
-            _isBeingManipulated = true;
-            Handedness = eventData.Pointer.Controller.ControllerHandedness;
-            _isController = eventData.Pointer.Controller.InputSource.SourceType == InputSourceType.Controller;
-        }
-        
-        private void OnManipulationEnd(ManipulationEventData eventData)
+        private void OnSelectExited(SelectExitEventArgs args)
         {
             _isBeingManipulated = false;
         }
 
-        public void OnFocusEnter(FocusEventData eventData)
+        private void OnSelectEntered(SelectEnterEventArgs args)
+        {
+            _isBeingManipulated = true;
+            
+            Handedness = args.interactorObject.handedness.ToHandedness();
+            if (args.interactorObject?.transform.TryGetComponent<XRController>(out var controller) ?? false)
+            {
+                _isController = true;
+            }
+            else _isController = false;
+        }
+
+        private void OnDisable()
+        {
+            _objectManipulator.firstHoverEntered.RemoveListener(OnFirstHoverEntered);
+            _objectManipulator.lastHoverExited.RemoveListener(OnLastHoverExited);
+            _objectManipulator.selectEntered.RemoveListener(OnSelectEntered);
+            _objectManipulator.selectExited.RemoveListener(OnSelectExited);
+        }
+
+        private void OnFirstHoverEntered(HoverEnterEventArgs args)
         {
             if (_isHeld || _isBeingManipulated) return;
             
             _isFocused = true;
-            Handedness = eventData.Pointer.Controller.ControllerHandedness;
-            _isController = eventData.Pointer.Controller.InputSource.SourceType == InputSourceType.Controller;
+            Handedness = args.interactorObject.handedness.ToHandedness();
             _tAtLastGrip = 0;
-            Debug.Log($"{name} focused with {Handedness} {eventData.Pointer.Controller.InputSource.SourceName}");
+            
+            if (args.interactorObject?.transform.TryGetComponent<XRController>(out var controller) ?? false)
+            {
+                _isController = true;
+            }
+            else _isController = false;
         }
 
-        public void OnFocusExit(FocusEventData eventData)
+        private void OnLastHoverExited(HoverExitEventArgs args)
         {
             _isFocused = false;
             if (!_isHeld) Handedness = Handedness.None;
-            Debug.Log($"{name} lost focus with {eventData.Pointer.Controller.ControllerHandedness} {eventData.Pointer.Controller.InputSource.SourceName}");
         }
 
         private void Update()
         {
-            var isGripDown = OVRInput.GetDown(Handedness.IsLeft()
+            var isGripDown = OVRInput.GetDown(Handedness == Handedness.Left
                 ? OVRInput.RawButton.LHandTrigger
                 : OVRInput.RawButton.RHandTrigger);
             
             if (_isHeld && isGripDown) ReleaseMe();
-
-            if (_isFocused && isGripDown)
+            
+            if (_objectManipulator.isHovered && isGripDown)
             {
                 var t = Time.time;
                 Debug.Log($"hold {t} prev at {_tAtLastGrip}");
@@ -97,12 +107,12 @@ namespace Musicality
             _isHeld = true;
             _objectManipulator.enabled = false;
             _orbital.enabled = true;
-            _solverHandler.TrackedHandness = Handedness;
+            _solverHandler.TrackedHandedness = Handedness;
             _solverHandler.enabled = true;
 
             // TODO: custom settings for other objects
             _solverHandler.AdditionalOffset = new Vector3(0, -0.02f, 0.005f);
-            _solverHandler.AdditionalRotation = new Vector3(-40f, Handedness.IsLeft() ? 7f : -7f, 0);
+            _solverHandler.AdditionalRotation = new Vector3(-40f, Handedness == Handedness.Left ? 7f : -7f, 0);
 
             // TODO: figure this out. option to not have a "docked" position 
             // _solverHandler.AdditionalOffset = _solverHandler.transform.position - _solverHandler.TransformTarget.position;

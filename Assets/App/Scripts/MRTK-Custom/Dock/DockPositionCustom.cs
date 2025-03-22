@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using Microsoft.MixedReality.Toolkit;
+using MixedReality.Toolkit;
 using Musicality;
 using UnityEngine;
 using UnityEngine.Serialization;

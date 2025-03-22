@@ -1,9 +1,7 @@
-using System;
-using Microsoft.MixedReality.Toolkit.Utilities;
+using Microsoft.MixedReality.Toolkit;
 using Shapes;
 using TMPro;
 using UnityEngine;
-using ScaleMode = Shapes.ScaleMode;
 
 namespace Musicality
 {

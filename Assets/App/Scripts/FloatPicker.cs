@@ -1,12 +1,12 @@
 using System;
-using Microsoft.MixedReality.Toolkit.UI;
-using Microsoft.MixedReality.Toolkit.Utilities.Solvers;
+using MixedReality.Toolkit.SpatialManipulation;
+using Oculus.Interaction;
 using TMPro;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
 
 namespace Musicality
 {
-    using ObjectManipulator = Microsoft.MixedReality.Toolkit.UI.ObjectManipulator;
 
     public class FloatPicker : MonoBehaviour
     {
@@ -19,9 +19,9 @@ namespace Musicality
         [SerializeField] private float valMax = 1;
         [SerializeField] private float valMin = 0;
         [SerializeField] private string label = "float picker";
+        private ObjectManipulator _manipulator;
         private Orbital _orbital;
         private SolverHandler _solverHandler;
-
         public Action<float> OnChange;
         public float Val { get; private set; }
 
@@ -42,9 +42,9 @@ namespace Musicality
                 _solverHandler.TransformOverride = orbitalTarget;
             }
             
-            var manipulator = valueDisplay.GetComponent<ObjectManipulator>();
-            manipulator.OnManipulationStarted.AddListener(OnManipulationStart);
-            manipulator.OnManipulationEnded.AddListener(OnManipulationEnd);
+            _manipulator = valueDisplay.GetComponent<ObjectManipulator>();
+            _manipulator.selectEntered.AddListener(OnSelectEntered);
+            _manipulator.selectExited.AddListener(OnSelectExited);
 
             picker.ClampAtMaxVal = valMax + 1;
             Val = valInitial;
@@ -63,6 +63,22 @@ namespace Musicality
             };
         }
 
+        private void OnSelectExited(SelectExitEventArgs args)
+        {
+            _orbital.UpdateLinkedTransform = false;
+        }
+
+        private void OnSelectEntered(SelectEnterEventArgs args)
+        {
+            _orbital.UpdateLinkedTransform = true;
+        }
+
+        private void OnDestroy()
+        {
+            _manipulator.selectEntered.RemoveListener(OnSelectEntered);
+            _manipulator.selectExited.RemoveListener(OnSelectExited);
+        }
+
         private void Start()
         {
             OnChange?.Invoke(valInitial);
@@ -73,16 +89,5 @@ namespace Musicality
         {
             labelTmp.text = label;
         }
-
-        private void OnManipulationEnd(ManipulationEventData arg0)
-        {
-            _orbital.UpdateLinkedTransform = false;
-        }
-
-        private void OnManipulationStart(ManipulationEventData arg0)
-        {
-            _orbital.UpdateLinkedTransform = true;
-        }
-
     }
 }
