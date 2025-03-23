@@ -70,10 +70,10 @@ namespace Musicality
                     ? OVRInput.RawButton.Y
                     : OVRInput.RawButton.B);
 
-                if (isThumbstickButtonDown || Input.GetKeyDown(KeyCode.C))
+                if (isThumbstickButtonDown /*|| Input.GetKeyDown(KeyCode.C)*/)
                     Clone();
                 
-                if (isDeleteButtonDown || Input.GetKeyDown(KeyCode.Delete))
+                if (isDeleteButtonDown/* || Input.GetKeyDown(KeyCode.Delete)*/)
                     Delete();
 
                 var thumbstickPos = OVRInput.Get(_handedness == Handedness.Left

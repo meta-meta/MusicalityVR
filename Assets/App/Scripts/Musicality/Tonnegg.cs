@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using OscSimpl;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.XR.Interaction.Toolkit.Interactors;
 
 namespace Musicality
@@ -155,8 +156,8 @@ namespace Musicality
                 _malletHead.Vibe(_velCurrent * velMultVibe, false);
             }
 
-            if (Input.GetMouseButtonDown(1) && objectManipulator.isHovered && notePicker)
-                ToggleNotePicker(!notePicker.gameObject.activeSelf);
+            // if (Input.GetMouseButtonDown(1) && objectManipulator.isHovered && notePicker)
+            //     ToggleNotePicker(!notePicker.gameObject.activeSelf);
 
             if (objectManipulator.isHovered)
             {
@@ -166,7 +167,7 @@ namespace Musicality
                         ? OVRInput.RawButton.X
                         : OVRInput.RawButton.A);
 
-                    var isMouseButton = Input.GetMouseButtonDown(1);
+                    // var isMouseButton = Input.GetMouseButtonDown(1);
 
                     if (isButtonDown && notePicker) ToggleNotePicker(!notePicker.gameObject.activeSelf);
                 }

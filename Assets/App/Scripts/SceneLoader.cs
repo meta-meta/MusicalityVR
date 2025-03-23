@@ -7,7 +7,7 @@ namespace App.Scripts
     {
         private void Awake()
         {
-            SceneManager.LoadScene(1, LoadSceneMode.Additive);
+            if (SceneManager.sceneCount == 1) SceneManager.LoadScene(1, LoadSceneMode.Additive);
         }
     }
 }

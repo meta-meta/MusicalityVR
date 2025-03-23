@@ -6,8 +6,14 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/App/Scenes/XR-Platform.unity
+    guid: fc4cc08af81c5bc4ba35c7e84782b1c6
+  - enabled: 0
     path: Assets/App/Scenes/DroneBalls.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/App/Scenes/MusicalitySandbox.unity
+    guid: dc03b43771555cd4681b04e2bfbe091e
   - enabled: 1
     path: Assets/Samples/Meta XR Audio SDK/71.0.0/Example Scenes/Ambisonics.unity
     guid: f095b1696b83471e9c2992318e82ab8c
